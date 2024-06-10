@@ -6,13 +6,25 @@ import User from "../models/User.js";
 export const createTask = async (req, res) => {
   try {
     const { userId } = req.user;
+
     const { title, team, stage, date, priority, assets } = req.body;
 
-    // const activity = {
-    //     type: "assigned",
-    //     activity: text,
-    //     by: userId,
-    //   };
+    let text = "New task has been assigned to you";
+    if (team?.length > 1) {
+      text = text + ` and ${team?.length - 1} others.`;
+    }
+
+    text =
+      text +
+      ` The task priority is set to ${priority}. The task date is ${new Date(
+        date
+      ).toDateString()}. Thank you!!!`;
+
+    const activity = {
+      type: "assigned",
+      activity: text,
+      by: userId,
+    };
 
     const task = await Task.create({
       title,
@@ -21,18 +33,8 @@ export const createTask = async (req, res) => {
       date,
       priority: priority.toLowerCase(),
       assets,
+      activities: activity,
     });
-
-    let text = "New task assigned to you ";
-    if (task.team.length > 1) {
-      text = text + `and ${task.team.length - 1} others`;
-    }
-
-    text =
-      text +
-      `The task priority is set to ${
-        task.priority
-      }. The task date is ${task.date.toDateString()}. Thank you!`;
 
     await Notice.create({
       team,
@@ -48,7 +50,6 @@ export const createTask = async (req, res) => {
     return res.status(400).json({ status: false, message: error.message });
   }
 };
-
 //POST DUPLICATE TASK
 export const duplicateTask = async (req, res) => {
   try {

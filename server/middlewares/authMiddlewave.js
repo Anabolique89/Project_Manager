@@ -4,7 +4,7 @@ import User from "../models/User.js";
 const protectRoute = async (req, res, next) => {
   try {
     //token from cookies
-    let token = req.cookie.token;
+    let token = req.cookies?.token;
     if (token) {
       const decodedTokens = jwt.verify(token, process.env.JWT_SECRET);
 
@@ -17,6 +17,10 @@ const protectRoute = async (req, res, next) => {
         userId: decodedTokens.userId,
       };
       next();
+    } else {
+      return res
+        .status(401)
+        .json({ status: false, message: "Not authorised. Try login" });
     }
   } catch (error) {
     console.log(error);
