@@ -1,11 +1,16 @@
 import express from "express";
 import { isAdminRoute, protectRoute } from "../middlewares/authMiddlewave.js";
 import {
-    getNotificationList,
+  activateUserProfile,
+  changeUserPassword,
+  deleteUserProfile,
+  getNotificationList,
   getTeamList,
   loginUser,
   logoutUser,
+  markNotificationRead,
   registerUser,
+  updateUserProfile,
 } from "../controllers/userController.js";
 
 const router = express.Router();
@@ -22,15 +27,15 @@ router.get("/get-team", protectRoute, isAdminRoute, getTeamList);
 router.get("/notifications", protectRoute, getNotificationList);
 
 //PUT - access your profile as a logged-in user (that's why we use protectedRoute)
-// router.put("/profile", protectRoute, updateUserProfile);
-// router.put("/read-noti", protectRoute, markNotificationRead);
-// router.put("/change-password", protectRoute, changeUserPassword);
+router.put("/profile", protectRoute, updateUserProfile);
+router.put("/read-noti", protectRoute, markNotificationRead);
+router.put("/change-password", protectRoute, changeUserPassword);
 
-// ADMIN ONLY
+// PUT & DELETE (ADMIN ONLY)
 
-// router
-//   .route("/:id")
-//   .put(protectRoute, isAdminRoute, activateUserProfile)
-//   .delete(protectRoute, isAdminRoute, deleteUserProfile);
+router
+  .route("/:id")
+  .put(protectRoute, isAdminRoute, activateUserProfile)
+  .delete(protectRoute, isAdminRoute, deleteUserProfile);
 
 export default router;
