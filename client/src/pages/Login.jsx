@@ -3,7 +3,11 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from "react-router-dom";
 import Textbox from "../components/Textbox";
 import Button from "../components/Button";
-import { useSelector } from 'react-redux';
+import Loading from "../components/Loader";
+import { useDispatch, useSelector } from 'react-redux';
+import { useLoginMutation } from '../redux/slices/api/authApiSlice';
+import { setCredentials } from '../redux/slices/authSlice';
+import {toast} from "sonner";
 
 
 const Login = () => {
@@ -15,15 +19,27 @@ const Login = () => {
   } = useForm();
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [login, {isLoading}] = useLoginMutation();
 
   const submitHandler = async (data) => {
-    console.log("submit");
-    console.log(user);
+    try{
+// const result = await login(data).unwrap();
+const result = await login(data);
+// console.log(result);
+dispatch(setCredentials(result))
+navigate("/");
+
+    }catch(error){
+console.log(error);
+toast.error(error?.data?.message);
+    }
   };
 
-  useEffect(() => {
-    user && navigate("/dashboard");
-  }, [user]);
+  // useEffect(() => {
+  //   user && navigate("/log-in");
+  // }, [user]);
 
   return (
     
@@ -89,11 +105,12 @@ const Login = () => {
                Oh oh! Did you forget your password?
               </span>
 
-              <Button
+{/* if loading is true, show loader, else, show button */}
+            { isLoading ? (<Loading />) : (<Button
                 type='submit'
                 label='Submit'
                 className='w-full h-10 bg-purple-700 text-white rounded-full'
-              />
+              />)}
             </div>
           </form>
         </div>
