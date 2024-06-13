@@ -15,6 +15,7 @@ const UserAvatar = () => {
   const [open, setOpen] = useState(false);
   const [openPassword, setOpenPassword] = useState(false);
   const { user } = useSelector((state) => state.auth);
+  console.log(user.data.name);
   // const [logoutUser] = useLogoutMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ const UserAvatar = () => {
           <div>
             <MenuButton className='w-10 h-10 2xl:w-12 2xl:h-12 items-center justify-center rounded-full bg-blue-600'>
               <span className='text-white font-semibold'>
-                {getInitials(user?.name)}
+                {getInitials(user?.data.name)}
               </span>
             </MenuButton>
           </div>

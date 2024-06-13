@@ -27,7 +27,7 @@ const Login = () => {
     try{
 // const result = await login(data).unwrap();
 const result = await login(data);
-// console.log(result);
+console.log(result);
 dispatch(setCredentials(result))
 navigate("/");
 
@@ -37,9 +37,9 @@ toast.error(error?.data?.message);
     }
   };
 
-  // useEffect(() => {
-  //   user && navigate("/log-in");
-  // }, [user]);
+  useEffect(() => {
+    user && navigate("/log-in");
+  }, [user]);
 
   return (
     
